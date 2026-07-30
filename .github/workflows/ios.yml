@@ -27,24 +27,24 @@ jobs:
         run: |
           npx cap copy ios
 
-      - name: Force iOS 14.0 Target Everywhere and Install Pods
+      - name: Force iOS 15.0 Target Everywhere and Install Pods
         run: |
           cd ios/App
           
-          # 1. Podfile के अंदर का बेस प्लेटफॉर्म जबरन iOS 14.0 करना
-          sed -i '' "s/platform :ios, '13.0'/platform :ios, '14.0'/g" Podfile || true
-          sed -i '' "s/platform :ios, '12.0'/platform :ios, '14.0'/g" Podfile || true
+          # Podfile में बेस प्लेटफॉर्म को iOS 15.0 सेट करना
+          sed -i '' "s/platform :ios, '13.0'/platform :ios, '15.0'/g" Podfile || true
+          sed -i '' "s/platform :ios, '14.0'/platform :ios, '15.0'/g" Podfile || true
+          sed -i '' "s/platform :ios, '12.0'/platform :ios, '15.0'/g" Podfile || true
           
-          # 2. एक मास्टर स्क्रिप्ट जोड़ना जो सभी प्लगइन्स (Dependencies) का वर्जन भी iOS 14.0 कर दे
+          # सभी प्लगइन्स का इंटरनल टारगेट भी iOS 15.0 सेट करना
           echo "post_install do |installer|
             installer.pods_project.targets.each do |target|
               target.build_configurations.each do |config|
-                config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
+                config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
               end
             end
           end" >> Podfile
 
-          # 3. फ्रेश रेपो अपडेट के साथ पॉड्स इंस्टॉल करना
           pod repo update
           pod install
 
