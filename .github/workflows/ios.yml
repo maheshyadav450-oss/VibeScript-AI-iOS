@@ -23,15 +23,19 @@ jobs:
         run: |
           npm run build --if-present
 
-      - name: Sync Capacitor iOS
+      - name: Copy Capacitor Web Assets
         run: |
-          npx cap sync ios
+          # बिना कोकोपॉड्स रन किए सिर्फ वेब एसेट्स को सिंक करना
+          npx cap copy ios
 
-      - name: Update Pods Platform
+      - name: Force iOS 14.0 Deployment Target and Install Pods
         run: |
           cd ios/App
-          # Podfile के अंदर मिनिमम डेप्लॉयमेंट टारगेट को ठीक करना
+          # Podfile के अंदर डिफ़ॉल्ट प्लेटफॉर्म को iOS 14.0 पर रिप्लेस करना
           sed -i '' "s/platform :ios, '13.0'/platform :ios, '14.0'/g" Podfile || true
+          sed -i '' "s/platform :ios, '12.0'/platform :ios, '14.0'/g" Podfile || true
+          
+          # क्लीन पॉड इंस्टॉल रन करना
           pod install
 
       - name: Build Xcode Project (Archive)
