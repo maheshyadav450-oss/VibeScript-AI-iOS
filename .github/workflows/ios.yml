@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -24,6 +24,16 @@ jobs:
 
       - name: Sync Capacitor iOS
         run: npx cap sync ios
+
+      - name: Force iOS 14.0 Target on Pods and App
+        run: |
+          cd ios/App
+          # Podfile में मिनिमम प्लेटफॉर्म को iOS 14.0 पर सेट करना
+          sed -i '' "s/platform :ios, '13.0'/platform :ios, '14.0'/g" Podfile || true
+          sed -i '' "s/platform :ios, '12.0'/platform :ios, '14.0'/g" Podfile || true
+          
+          # कोकोपॉड्स डिपेंडेंसीज इंस्टॉल करना
+          pod install
 
       - name: Build Xcode Project (Archive)
         run: |
