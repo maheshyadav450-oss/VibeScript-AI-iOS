@@ -2,23 +2,8 @@
   "appId": "com.vibescriptai.app",
   "appName": "VibeScript AI",
   "webDir": "dist",
-  "server": {
-    "androidScheme": "https",
-    "iosScheme": "capacitor"
-  },
-  "android": {
-    "allowMixedContent": false,
-    "backgroundColor": "#0B0B0F"
-  },
+  "plugins": {},
   "ios": {
-    "backgroundColor": "#0B0B0F",
-    "contentInset": "always"
-  },
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 2000,
-      "backgroundColor": "#0B0B0F",
-      "showSpinner": false
-    }
+    "minDeploymentTarget": "14.0"
   }
 }
