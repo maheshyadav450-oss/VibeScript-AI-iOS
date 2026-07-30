@@ -10,29 +10,28 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Set up Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: '22'
 
       - name: Install Dependencies
-        run: npm install --legacy-peer-deps
+        run: |
+          npm install --legacy-peer-deps
 
       - name: Build Web Project
-        run: npm run build
+        run: |
+          npm run build --if-present
 
       - name: Sync Capacitor iOS
-        run: npx cap sync ios
+        run: |
+          npx cap sync ios
 
-      - name: Force iOS 14.0 Target on Pods and App
+      - name: Update Pods Platform
         run: |
           cd ios/App
-          # Podfile में मिनिमम प्लेटफॉर्म को iOS 14.0 पर सेट करना
+          # Podfile के अंदर मिनिमम डेप्लॉयमेंट टारगेट को ठीक करना
           sed -i '' "s/platform :ios, '13.0'/platform :ios, '14.0'/g" Podfile || true
-          sed -i '' "s/platform :ios, '12.0'/platform :ios, '14.0'/g" Podfile || true
-          
-          # कोकोपॉड्स डिपेंडेंसीज इंस्टॉल करना
           pod install
 
       - name: Build Xcode Project (Archive)
@@ -44,7 +43,7 @@ jobs:
         run: |
           cd ios/App
           mkdir -p Payload
-          cp -r App.xcarchive/Products/Applications/App.app Payload/
+          cp -r App.xcarchive/Products/Applications/App.app Payload/ || cp -r App.xcarchive/Products/Applications/*.app Payload/
           zip -r VibeScriptAI-unsigned.ipa Payload
           mv VibeScriptAI-unsigned.ipa ../../
 
