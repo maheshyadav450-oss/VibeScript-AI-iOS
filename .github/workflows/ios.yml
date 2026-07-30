@@ -1,0 +1,45 @@
+name: Build iOS App (.ipa)
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Build Web Project
+        run: npm run build
+
+      - name: Sync Capacitor iOS
+        run: npx cap sync ios
+
+      - name: Build Xcode Project (Archive)
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -archivePath App.xcarchive archive CODE_SIGNING_ALLOWED=NO
+
+      - name: Export Unsigned IPA (For Testing)
+        run: |
+          cd ios/App
+          mkdir -p Payload
+          cp -r App.xcarchive/Products/Applications/App.app Payload/
+          zip -r VibeScriptAI-unsigned.ipa Payload
+          mv VibeScriptAI-unsigned.ipa ../../
+
+      - name: Upload Finished IPA Asset
+        uses: actions/upload-artifact@v4
+        with:
+          name: VibeScriptAI-iOS-Build
+          path: VibeScriptAI-unsigned.ipa
