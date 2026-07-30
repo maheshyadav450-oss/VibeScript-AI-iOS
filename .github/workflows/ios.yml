@@ -25,17 +25,11 @@ jobs:
 
       - name: Copy Capacitor Web Assets
         run: |
-          # बिना कोकोपॉड्स रन किए सिर्फ वेब एसेट्स को सिंक करना
           npx cap copy ios
 
-      - name: Force iOS 14.0 Deployment Target and Install Pods
+      - name: Install CocoaPods Dependencies
         run: |
           cd ios/App
-          # Podfile के अंदर डिफ़ॉल्ट प्लेटफॉर्म को iOS 14.0 पर रिप्लेस करना
-          sed -i '' "s/platform :ios, '13.0'/platform :ios, '14.0'/g" Podfile || true
-          sed -i '' "s/platform :ios, '12.0'/platform :ios, '14.0'/g" Podfile || true
-          
-          # क्लीन पॉड इंस्टॉल रन करना
           pod install
 
       - name: Build Xcode Project (Archive)
