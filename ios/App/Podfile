@@ -2,10 +2,12 @@ platform :ios, '14.0'
 
 use_frameworks!
 
-# Read target package info
-require '../../node_modules/@capacitor/ios/scripts/pods_helpers'
+# Capacitor के प्लगइन्स और हेल्पर फंक्शन्स को लोड करने का सही तरीका
+def capacitor_pods
+  pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
+  pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
+end
 
 target 'App' do
   capacitor_pods
-  # यदि आपके पास कोई अन्य कस्टमाइज्ड पॉड्स हैं तो वो यहाँ आ सकते हैं
 end

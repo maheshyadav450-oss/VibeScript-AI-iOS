@@ -10,10 +10,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 22
+      - name: Set up Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '20'
 
       - name: Install Dependencies
         run: |
@@ -27,9 +27,10 @@ jobs:
         run: |
           npx cap copy ios
 
-      - name: Install CocoaPods Dependencies
+      - name: Clean and Install CocoaPods
         run: |
           cd ios/App
+          pod repo update
           pod install
 
       - name: Build Xcode Project (Archive)
